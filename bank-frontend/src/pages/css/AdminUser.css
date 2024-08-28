@@ -1,0 +1,39 @@
+/* AdminUser.css */
+
+/* Sidebar styles for smaller screens */
+@media (max-width: 767px) {
+    .sidebar {
+      display: none; /* Hide sidebar on small screens */
+    }
+    .col-md-10 {
+      margin-left: 0 !important; /* Remove left margin on small screens */
+    }
+  }
+  
+  /* Ensure the table is scrollable on smaller screens */
+  .table-responsive {
+    overflow-x: auto;
+  }
+  
+  /* Adjust input and button styles */
+  .form-control {
+    border-radius: 0.375rem; /* Rounded corners */
+  }
+  
+  .btn {
+    border-radius: 0.375rem; /* Rounded corners */
+  }
+  
+  /* Adjust padding and margins */
+  .sidebar-header {
+    margin-top: 1rem;
+  }
+  
+  .sidebar-menu {
+    margin-top: 1rem;
+  }
+  
+  .user-info {
+    margin-top: 1rem;
+  }
+  
