@@ -41,3 +41,9 @@ export const adminAllUserAPI=async(searchKey,reqHeader)=>{
 export const adminAlltransAPI=async(searchKey,reqHeader)=>{
     return await commonAPI("get",`${serverURL}/admin/users/transaction?search=${searchKey}`,"",reqHeader)
 }
+
+// sendmoney
+
+export const sendMoneyAPI = async (data, reqHeader) => {
+    return await commonAPI("post", `${serverURL}/user/sendmoney`, data, reqHeader);
+};

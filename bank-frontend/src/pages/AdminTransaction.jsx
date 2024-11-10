@@ -98,7 +98,7 @@ function AdminTransaction() {
                   <tr key={transaction._id}>
                     <th scope='row'>{index + 1}</th>
                     <td>{transaction._id}</td>
-                    <td>{transaction.userId.username}</td> {/* Assuming username is populated */}
+                    <td>{transaction.userId.username}</td> 
                     <td>{transaction.amount}</td>
                     <td>{new Date(transaction.date).toLocaleString()}</td>
                     <td>

@@ -42,7 +42,8 @@ setUsername(sessionStorage.getItem('username'))
 </div>
 
           <h1 className='mt-5'>User Dashboard</h1>
-          <p>Welcome to your dashboard. Here you can view your accounts, manage transactions, and update your settings.</p>
+          <p>Welcome to your dashboard. Here, you can view your accounts, manage transactions, and transfer funds securely.</p>
+
           <div className="row">
             <div className="col-md-4">
               <div className="card">

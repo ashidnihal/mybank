@@ -82,6 +82,9 @@ function Login({ register }) {
         if (result.status === 200) {
           sessionStorage.setItem("username", result.data.existingUser.username);
           sessionStorage.setItem("token", result.data.token);
+          sessionStorage.setItem("isAdmin",result.data.existingUser.isAdmin)
+         
+          
           Swal.fire({
             title: 'Success',
             text: 'Login Success',

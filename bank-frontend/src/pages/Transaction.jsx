@@ -94,7 +94,7 @@ import { Link } from 'react-router-dom';
 import { CiLogout } from "react-icons/ci";
 import { MDBTable, MDBTableHead, MDBTableBody, MDBBadge } from 'mdb-react-ui-kit';
 import { getUserTransactionsAPI } from '../services/allAPI'; 
-import { format } from 'date-fns';
+
 function Transaction() {
   const [username, setUsername] = useState("");
   const [transactions, setTransactions] = useState([]);
@@ -112,21 +112,31 @@ function Transaction() {
         setTransactions(result.data);
         console.log(result.data);
       } catch (error) {
-        console.error("Failed to fetch user details:", error);
+        console.error("Failed to fetch transactions:", error);
+        setError("Failed to fetch transactions.");
       }
     }
   };
   
   useEffect(() => {
     setUsername(sessionStorage.getItem('username'));
-
-  
-  
-
     fetchTransactions();
-    
-    
   }, []);
+
+  const renderBadge = (type) => {
+    switch (type) {
+      case 'deposit':
+        return <MDBBadge color='success' pill>Deposit</MDBBadge>;
+      case 'withdrawal':
+        return <MDBBadge color='danger' pill>Withdrawal</MDBBadge>;
+      case 'send':
+        return <MDBBadge color='primary' pill>Sent Money</MDBBadge>;
+      case 'receive':
+        return <MDBBadge color='info' pill>Received Money</MDBBadge>;
+      default:
+        return <MDBBadge color='secondary' pill>Unknown</MDBBadge>;
+    }
+  };
 
   return (
     <div className="container-fluid user-dashboard">
@@ -172,7 +182,6 @@ function Transaction() {
                 <th scope='col'>Amount</th>
                 <th scope='col'>Date</th>
                 <th scope='col'>Status</th>
-                <th scope='col'>Actions</th>
               </tr>
             </MDBTableHead>
             <MDBTableBody>
@@ -184,16 +193,13 @@ function Transaction() {
                     <td>{transaction.amount}</td>
                     <td>{new Date(transaction.date).toLocaleString()}</td>
                     <td>
-                      <MDBBadge color={transaction.type === 'deposit' ? 'success' : 'danger'} pill>
-                        {transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}
-                      </MDBBadge>
+                      {renderBadge(transaction.type)}
                     </td>
-                    <td>Actions</td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan='6'>No transactions found.</td>
+                  <td colSpan='5'>No transactions found.</td>
                 </tr>
               )}
             </MDBTableBody>

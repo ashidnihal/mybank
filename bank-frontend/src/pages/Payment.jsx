@@ -1,21 +1,26 @@
-
 import React, { useEffect, useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 import { CiLogout } from "react-icons/ci";
-import { depositAPI, withdrawAPI } from '../services/allAPI';
+import { depositAPI, withdrawAPI, sendMoneyAPI } from '../services/allAPI';  // Import the sendMoneyAPI function
 
 function Payment() {
   const [showDeposit, setShowDeposit] = useState(false);
   const [showWithdraw, setShowWithdraw] = useState(false);
+  const [showSendMoney, setShowSendMoney] = useState(false);  // New state for Send Money modal
   const [amount, setAmount] = useState(''); 
   const [message, setMessage] = useState(''); 
+  const [recipientAccount, setRecipientAccount] = useState(''); // New state for recipient account number
   const [username, setUsername] = useState('');
+  
   const handleCloseWithdraw = () => setShowWithdraw(false);
   const handleShowWithdraw = () => setShowWithdraw(true);
   const handleCloseDeposit = () => setShowDeposit(false);
- const handleShowDeposit = () => setShowDeposit(true);
+  const handleShowDeposit = () => setShowDeposit(true);
+  const handleCloseSendMoney = () => setShowSendMoney(false); // Close send money modal
+  const handleShowSendMoney = () => setShowSendMoney(true);   // Open send money modal
+
   useEffect(() => {
     setUsername(sessionStorage.getItem('username'));
   }, []);
@@ -35,6 +40,9 @@ function Payment() {
       result = await depositAPI(transactionData, reqHeader);
     } else if (type === 'withdraw') {
       result = await withdrawAPI(transactionData, reqHeader);
+    } else if (type === 'sendMoney') {
+      // Call send money API with the recipient's account number and amount
+      result = await sendMoneyAPI({ userId, recipientAccount, amount: parseFloat(amount) }, reqHeader);
     }
 
     if (result && result.data) {
@@ -44,8 +52,10 @@ function Payment() {
     }
 
     setAmount(''); 
+    setRecipientAccount('');  // Clear the recipient account field after transaction
     setShowDeposit(false);
     setShowWithdraw(false);
+    setShowSendMoney(false);  // Close send money modal after transaction
   };
 
   return (
@@ -81,11 +91,12 @@ function Payment() {
             </div>
           </div>
 
-          <h1 className='mt-5'>User Dashboard</h1>
-          <p>Welcome to your dashboard. Here you can view your accounts, manage transactions, and update your settings.</p>
+          <h1 className='mt-5'>Payment Dashboard</h1>
+          <p>Welcome to your dashboard. Here, you can deposit, withdraw, and send money.</p>
+
 
           <div className="row mt-4">
-            <div className="col-md-6 mb-4">
+            <div className="col-md-4 mb-4">
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">Deposit</h5>
@@ -94,12 +105,21 @@ function Payment() {
                 </div>
               </div>
             </div>
-            <div className="col-md-6 mb-4">
+            <div className="col-md-4 mb-4">
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">Withdraw</h5>
                   <p className="card-text">Withdraw funds from your account.</p>
                   <Button variant="primary" onClick={handleShowWithdraw}>Withdraw Funds</Button>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4 mb-4">
+              <div className="card">
+                <div className="card-body">
+                  <h5 className="card-title">Send Money</h5>
+                  <p className="card-text">Send funds to another user.</p>
+                  <Button variant="primary" onClick={handleShowSendMoney}>Send Money</Button>
                 </div>
               </div>
             </div>
@@ -151,6 +171,45 @@ function Payment() {
                 </div>
                 <Button variant="primary" type="button" onClick={() => handleTransaction('withdraw')}>Withdraw</Button>
               </form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseWithdraw}>Close</Button>
+            </Modal.Footer>
+          </Modal>
+
+          {/* Send Money Modal */}
+          <Modal show={showSendMoney} onHide={handleCloseSendMoney}>
+            <Modal.Header closeButton>
+              <Modal.Title>Send Money</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <form>
+                <div className="mb-3">
+                  <label htmlFor="recipientAccount" className="form-label">Recipient Account Number</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="recipientAccount"
+                    value={recipientAccount}
+                    onChange={(e) => setRecipientAccount(e.target.value)}
+                    placeholder="Enter recipient account number"
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="sendAmount" className="form-label">Amount</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="sendAmount"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    placeholder="Enter amount"
+                  />
+                </div>
+                <Button variant="primary" type="button" onClick={() => handleTransaction('sendMoney')}>Send Money</Button>
+              </form>
+           
+
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleCloseWithdraw}>Close</Button>

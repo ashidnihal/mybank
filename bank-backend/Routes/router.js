@@ -4,8 +4,9 @@ const transactionController = require('../Controllers/transactionControl');
 const adminController = require('../Controllers/adminControl')
 
 // import jwt
-const jwtMiddleware =require('../Middleware/jwtMiddleware')
+// const  { jwtMiddleware, isAdmin } =require('../Middleware/jwtMiddleware')
 
+const  jwtMiddleware=require('../Middleware/jwtMiddleware')
 
 const router = express.Router()
 
@@ -14,7 +15,7 @@ router.post('/register',userController.register)
 // login api call
 router.post('/login',userController.login)
 // admin login
-// router.post('/login/admin',userController.loginAdmin);
+// router.post('/login/admin',jwtMiddleware,isAdmin,userController.login);
 // user details
 router.get('/user/details',jwtMiddleware,userController.getUserDetails)
 // Deposit
@@ -28,5 +29,6 @@ router.get('/user/transactions', jwtMiddleware, transactionController.getUserTra
 router.get('/admin/users',jwtMiddleware,adminController.getAllUsersadmin)
 // all transaction
 router.get('/admin/users/transaction',jwtMiddleware,adminController.getAllUsersTransaction)
-
+// sendmoney
+router.post('/user/sendmoney', jwtMiddleware,transactionController.sendMoney); 
 module.exports = router;
